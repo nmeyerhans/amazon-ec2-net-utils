@@ -28,10 +28,14 @@ Source14:  write_net_rules
 Source15:  rule_generator.functions
 Source16:  ec2net-ifup@.service
 
+# Functional tests
+Source17:  tests
+
 URL:       https://github.com/aws/amazon-ec2-net-utils
 BuildArch: noarch
 Requires:  curl
 Requires:  iproute
+BuildRequires: make
 %if %{systemd}
 %{?systemd_requires}
 BuildRequires: systemd-units
@@ -46,6 +50,10 @@ amazon-ec2-net-utils contains a set of utilities for managing elastic network
 interfaces.
 
 %prep
+
+# Copy files needed for test execution
+cp %{SOURCE3} .
+cp -ar %{SOURCE17} .
 
 %build
 
@@ -88,8 +96,14 @@ install -m644 %{SOURCE10} $RPM_BUILD_ROOT%{_mandir}/man8/ec2ifscan.8
 # add module configs
 install -m644 -D %{SOURCE11} $RPM_BUILD_ROOT/etc/modprobe.d/ixgbevf.conf
 
+%check
+make -C tests test
+
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+# Remove test related files copied during %prep
+rm -rf tests ec2net-functions
 
 %if %{with systemd}
 %post
