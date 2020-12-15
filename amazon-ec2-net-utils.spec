@@ -10,26 +10,7 @@ Version:   1.5
 Release:   1%{?dist}
 License:   MIT and GPLv2
 Group:     System Tools
-Source0:   53-ec2-network-interfaces.rules.systemd
-Source1:   53-ec2-network-interfaces.rules.upstart
-Source2:   75-persistent-net-generator.rules
-Source3:   ec2net-functions
-Source4:   ec2net.hotplug
-Source5:   ec2ifup
-Source6:   ec2ifdown
-Source7:   ec2dhcp.sh
-Source8:   ec2ifup.8
-Source9:   ec2ifscan
-Source10:  ec2ifscan.8
-Source11:  ixgbevf.conf
-Source12:  elastic-network-interfaces.conf
-Source13:  ec2net-scan.service
-Source14:  write_net_rules
-Source15:  rule_generator.functions
-Source16:  ec2net-ifup@.service
-
-# Functional tests
-Source17:  tests
+Source:    amazon-ec2-net-utils-%{version}.tar.gz
 
 URL:       https://github.com/aws/amazon-ec2-net-utils
 BuildArch: noarch
@@ -52,9 +33,7 @@ interfaces.
 
 %prep
 
-# Copy files needed for test execution
-cp %{SOURCE3} .
-cp -ar %{SOURCE17} .
+%setup -q
 
 %build
 
@@ -98,7 +77,7 @@ install -m644 %{SOURCE10} $RPM_BUILD_ROOT%{_mandir}/man8/ec2ifscan.8
 install -m644 -D %{SOURCE11} $RPM_BUILD_ROOT/etc/modprobe.d/ixgbevf.conf
 
 %check
-make -C tests test
+#make -C tests test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
