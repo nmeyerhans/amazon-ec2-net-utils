@@ -6,8 +6,8 @@
 
 Name:      amazon-ec2-net-utils
 Summary:   A set of network tools for managing ENIs
-Version:   1.4
-Release:   2%{?dist}
+Version:   1.5
+Release:   1%{?dist}
 License:   MIT and GPLv2
 Group:     System Tools
 Source0:   53-ec2-network-interfaces.rules.systemd
@@ -42,7 +42,8 @@ BuildRequires: systemd-units
 Requires: systemd-units
 %endif # systemd
 Requires: dhclient
-Provides: ec2-net-utils
+Provides: ec2-net-utils = %{version}-%{release}
+Obsoletes: ec2-net-utils < 1.5
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 %description
